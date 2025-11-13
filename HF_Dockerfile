@@ -1,0 +1,27 @@
+# Dockerfile for Hugging Face Spaces
+FROM python:3.11-slim
+
+# Create user (required by HF Spaces)
+RUN useradd -m -u 1000 user
+USER user
+
+# Set environment
+ENV PATH="/home/user/.local/bin:$PATH"
+ENV PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+# Copy requirements
+COPY --chown=user ./requirements.txt requirements.txt
+
+# Install dependencies
+RUN pip install --no-cache-dir --upgrade -r requirements.txt
+
+# Copy application files
+COPY --chown=user . /app
+
+# Expose port 7860 (REQUIRED by HF Spaces)
+EXPOSE 7860
+
+# Run application on port 7860
+CMD ["uvicorn", "fastapi_chatbot:app", "--host", "0.0.0.0", "--port", "7860"]

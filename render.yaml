@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: mindneox-backend
+    env: python
+    region: oregon
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn fastapi_chatbot:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: FIREBASE_SERVICE_ACCOUNT_JSON
+        sync: false
+      - key: PINECONE_API_KEY
+        sync: false
+      - key: HUGGINGFACE_HUB_TOKEN
+        sync: false
