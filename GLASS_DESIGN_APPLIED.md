@@ -14,6 +14,7 @@ A design trend featuring:
 
 ## Global Glass Classes Available
 
+
 ### From `index.css`:
 
 #### 1. **`.glass`**

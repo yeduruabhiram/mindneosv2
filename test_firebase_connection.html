@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Firebase Connection Test</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+            background: #0a0e1a; 
+            color: white; 
+        }
+        .status { 
+            padding: 10px; 
+            margin: 10px 0; 
+            border-radius: 5px; 
+        }
+        .success { background: #4CAF50; }
+        .error { background: #f44336; }
+        .warning { background: #ff9800; }
+        .info { background: #2196F3; }
+    </style>
+</head>
+<body>
+    <h1>🔥 Firebase Connection Test</h1>
+    <div id="status"></div>
+
+    <script type="module">
+        const statusDiv = document.getElementById('status');
+        
+        function addStatus(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `status ${type}`;
+            div.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            statusDiv.appendChild(div);
+            console.log(message);
+        }
+
+        try {
+            addStatus('🚀 Starting Firebase connection test...');
+            
+            // Import Firebase modules
+            const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js');
+            const { getFirestore, collection, addDoc } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js');
+            
+            addStatus('✅ Firebase modules imported successfully', 'success');
+
+            // Firebase config (same as in your app)
+            const firebaseConfig = {
+                apiKey: "AIzaSyBQtb9AVk4zaGdbFr-KArUvtJAIzwmJF_g",
+                authDomain: "mindneoxai.firebaseapp.com",
+                projectId: "mindneoxai",
+                storageBucket: "mindneoxai.firebasestorage.app",
+                messagingSenderId: "432980643521",
+                appId: "1:432980643521:web:29aa3a269a4301e19f8e40"
+            };
+
+            addStatus('🔧 Initializing Firebase app...');
+            const app = initializeApp(firebaseConfig);
+            addStatus('✅ Firebase app initialized', 'success');
+
+            addStatus('🗄️ Initializing Firestore...');
+            const db = getFirestore(app);
+            addStatus('✅ Firestore initialized', 'success');
+
+            addStatus('🧪 Testing Firestore write operation...');
+            const testDoc = {
+                test: true,
+                message: 'Connection test from standalone HTML',
+                timestamp: new Date().toISOString(),
+                userAgent: navigator.userAgent
+            };
+
+            const docRef = await addDoc(collection(db, 'connection_test'), testDoc);
+            addStatus(`✅ Test document written successfully! ID: ${docRef.id}`, 'success');
+            
+            addStatus('🎉 All Firebase tests passed!', 'success');
+
+        } catch (error) {
+            addStatus(`❌ Firebase test failed: ${error.message}`, 'error');
+            addStatus(`Error code: ${error.code || 'Unknown'}`, 'error');
+            addStatus(`Full error: ${JSON.stringify(error, null, 2)}`, 'error');
+            console.error('Full error object:', error);
+        }
+    </script>
+</body>
+</html>

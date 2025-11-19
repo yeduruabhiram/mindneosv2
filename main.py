@@ -31,7 +31,7 @@ try:
     pinecone = _pinecone
     PINECONE_AVAILABLE = True
 except Exception as e:
-    # Non-fatal at startup: log and continue with Pinecone disabled. The
+    # Non-fatal at startup: log and continue with Pinecone disabled.
     # application will still run and can use Redis or in-memory cache.
     print(f"⚠️  Pinecone import failed at startup (continuing without Pinecone): {e}")
     pinecone = None

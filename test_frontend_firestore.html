@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Frontend Firestore</title>
+</head>
+<body>
+    <h1>Testing Frontend Firestore Integration</h1>
+    <button id="testSave">Test Save to Firestore</button>
+    <button id="testLoad">Test Load from Firestore</button>
+    <div id="results"></div>
+
+    <script type="module">
+        // Import Firebase
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, collection, addDoc, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBQtb9AVk4zaGdbFr-KArUvtJAIzwmJF_g",
+            authDomain: "mindneoxai.firebaseapp.com",
+            projectId: "mindneoxai",
+            storageBucket: "mindneoxai.firebasestorage.app",
+            messagingSenderId: "432980643521",
+            appId: "1:432980643521:web:29aa3a269a4301e19f8e40"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const results = document.getElementById('results');
+
+        function log(message) {
+            results.innerHTML += '<p>' + message + '</p>';
+            console.log(message);
+        }
+
+        // Test save function
+        document.getElementById('testSave').addEventListener('click', async () => {
+            try {
+                log('🧪 Testing Firestore save...');
+                
+                const testData = {
+                    userId: 'test_user_frontend',
+                    userMessage: 'Hello from frontend test',
+                    aiResponse: 'Hello! This is a test response from AI.',
+                    timestamp: new Date().toISOString(),
+                    source: 'frontend_test'
+                };
+
+                const docRef = await addDoc(collection(db, 'chat_test'), testData);
+                log('✅ Document saved with ID: ' + docRef.id);
+                
+            } catch (error) {
+                log('❌ Save failed: ' + error.message);
+                console.error('Full error:', error);
+            }
+        });
+
+        // Test load function
+        document.getElementById('testLoad').addEventListener('click', async () => {
+            try {
+                log('📖 Testing Firestore load...');
+                
+                const querySnapshot = await getDocs(collection(db, 'chat_test'));
+                log('✅ Found ' + querySnapshot.size + ' documents');
+                
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    log('📄 ' + doc.id + ': ' + data.userMessage);
+                });
+                
+            } catch (error) {
+                log('❌ Load failed: ' + error.message);
+                console.error('Full error:', error);
+            }
+        });
+
+        // Auto-test on load
+        log('🔥 Firebase initialized for frontend testing');
+        log('👆 Click buttons to test save/load functionality');
+    </script>
+</body>
+</html>
