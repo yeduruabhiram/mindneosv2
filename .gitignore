@@ -61,6 +61,19 @@ models/
 # Credentials (keep these secret!)
 *firebase*.json
 firebase-credentials.json
+*.json
+!package.json
+!package-lock.json
+!tsconfig.json
+!vercel.json
+!firebase.json
+!firestore.json
+
+# Backend files with potential secrets
+main.py
+fastapi_chatbot.py
+firebase_chatbot.py
+COLAB_COPY_PASTE_CELLS.txt
 
 # Logs
 *.log
